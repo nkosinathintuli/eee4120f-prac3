@@ -49,7 +49,18 @@ void createRandomSquareMatrix(int Size, int* squareMatrix, bool displayMatrices)
 
 }
 
-
+void matrixMult(int Size,int *output, int matrixA[], int matrixB[]){
+	//int temp = *output;
+	for(int i = 0; i<Size; i++){
+		for(int k = 0; k<Size; k++){
+			int res = 0;
+			for(int j = 0; j<Size; j++){
+				res+=matrixA[i*Size+j]*matrixB[j*Size+k];
+			}	
+			output[i*Size+k]=res;
+		}
+	}
+}
 
 
 int main(void){
@@ -82,9 +93,16 @@ int main(void){
 	
 	//TODO: code your golden standard matrix multiplication here
 		
-		
-	
-	
+	int temp[countA];
+	matrixMult(Size, temp, matrixA, matrixB);
+
+	for(int i = 0; i<Size; i++){
+		for(int j = 0; j<Size; j++){
+			matrixB[i*Size+j]=2*matrixB[i*Size+j];
+		}
+	}
+
+	matrixMult(Size, output, temp, matrixB);
 	
 	//This if statement will display the matrix in output	
 	if(displayMatrices){
