@@ -97,12 +97,14 @@ int main(void)
 	//Initialize Buffers, memory space the allows for communication between the host and the target device
 	//TODO: initialize matrixA_buffer, matrixB_buffer and output_buffer
 
+	cl_mem matrixA_buffer, matrixB_buffer, output_buffer;
+
 	//***step 1*** Get the platform you want to use
-	//cl_int clGetPlatformIDs(cl_uint num_entries,
-	//				cl_platform_id *platforms, 
-	//				cl_uint *num_platforms)
+	// cl_int clGetPlatformIDs(cl_uint num_entries,
+	// 				cl_platform_id *platforms, 
+	// 				cl_uint *num_platforms);
   	
-    	//------------------------------------------------------------------------
+    //------------------------------------------------------------------------
     
 	cl_uint platformCount; //keeps track of the number of platforms you have installed on your device
 	cl_platform_id *platforms;
@@ -131,11 +133,11 @@ int main(void)
 	//------------------------------------------------------------------------
 
 	//***step 2*** get device ID must first get platform
-	//cl_int clGetDeviceIDs(cl_platform_id platform,
-	//			cl_device_type device_type, 
-	//			cl_uint num_entries, 
-	//			cl_device_id *devices, 
-	//			cl_uint *num_devices)
+	// cl_int clGetDeviceIDs(cl_platform_id platform,
+	// 			cl_device_type device_type, 
+	// 			cl_uint num_entries, 
+	// 			cl_device_id *devices, 
+	// 			cl_uint *num_devices);
 	
 	cl_device_id device; //this is your deviceID
 	cl_int err;
@@ -155,7 +157,7 @@ int main(void)
 	//				cl_uint num_devices,
 	//				const cl_device_id *devices,
 	//				void *pfn_notify(const char *errinfo, const void *private_info, size_t cb, void *user_data),
-	//				void *user_data,cl_int *errcode_ret)
+	//				void *user_data,cl_int *errcode_ret);
 	cl_context context; //This is your contextID, the line below must just run
 	context = clCreateContext(NULL, 1, &device, NULL, NULL, NULL);
 
@@ -212,6 +214,8 @@ int main(void)
 
 	//TODO: select the kernel you are running
 
+	cl_kernel kernel = clCreateKernel(program, "matrixMultiplication", &err);
+
 	//------------------------------------------------------------------------
 	
 	//***Step 8*** create command queue to the target device. This is the queue that the kernels get dispatched too, to get the the desired device.
@@ -227,11 +231,14 @@ int main(void)
 	//***Step 9*** create data buffers for memory management between the host and the target device
 	//TODO: set global_size, local_size and num_groups, in order to control the number of work item in each work group
 	
+	size_t global_size = 16; //total number of work items 
+	size_t local_size = 4; //Size of each work group
+	cl_int num_groups = global_size/local_size; //number of work groups needed
+
 	//already got matrixA and matrixB
 	//TODO: initialize the output array
 
-   
-
+	int output[global_size]; //output array
 	
 	//Buffer (memory block) that both the host and target device can access 
 	//cl_mem clCreateBuffer(cl_context context,
